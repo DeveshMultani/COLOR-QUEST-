@@ -1,0 +1,6 @@
+{
+  "name": "ColorQuest - Color Theory Puzzle Game",
+  "description": "Master additive RGB and subtractive CMYK color models, harmonic schemes, and image segmentation in an interactive color-theory puzzle challenge.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
