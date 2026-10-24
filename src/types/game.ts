@@ -40,6 +40,8 @@ export type ColorModelMode = 'rgb' | 'cmyk';
 
 export type GameDifficulty = 'easy' | 'medium' | 'hard';
 
+export type TimerMode = 'countdown' | 'stopwatch';
+
 export interface RegionData {
   id: number;
   label: string;

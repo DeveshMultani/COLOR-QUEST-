@@ -1,5 +1,5 @@
 import React from 'react';
-import { Eye, Check, Sparkles, Layers, Sliders } from 'lucide-react';
+import { Check, Sliders } from 'lucide-react';
 import type { ColorSwatch, ColorModelMode, ColorSchemeType, RegionData } from '../types/game.ts';
 import { sounds } from '../services/soundEffects.ts';
 
@@ -14,6 +14,7 @@ interface PaletteDockProps {
   regions: RegionData[];
   onToggleInspector: () => void;
   isInspectorOpen: boolean;
+  highlightedSwatchIndex?: number | null;
 }
 
 const SCHEMES: { id: ColorSchemeType; label: string; desc: string }[] = [
@@ -36,8 +37,8 @@ export const PaletteDock: React.FC<PaletteDockProps> = ({
   regions,
   onToggleInspector,
   isInspectorOpen,
+  highlightedSwatchIndex,
 }) => {
-  // Compute how many regions are left for each color index
   const swatchProgress = React.useMemo(() => {
     return palette.map((swatch, idx) => {
       const associatedRegions = regions.filter(r => r.targetColorIndex === idx);
@@ -56,15 +57,15 @@ export const PaletteDock: React.FC<PaletteDockProps> = ({
   return (
     <aside
       aria-label="Color Palette and Theory Controls"
-      className="w-full bg-slate-900/95 border-t border-slate-800 p-3 sm:p-4 select-none"
+      className="w-full bg-[#181715] border-t border-[#2C2924] p-3 sm:p-4 select-none"
     >
-      <div className="max-w-7xl mx-auto flex flex-col gap-3">
+      <div className="max-w-7xl mx-auto flex flex-col gap-2.5">
         {/* Top Control Strip: Scheme selector & Model Toggle */}
-        <div className="flex flex-wrap items-center justify-between gap-2.5 pb-2 border-b border-slate-800/80">
+        <div className="flex flex-wrap items-center justify-between gap-3 pb-2.5 border-b border-[#2C2924]">
           {/* Scheme Tabs */}
           <div className="flex items-center gap-1.5 overflow-x-auto py-0.5 no-scrollbar" role="tablist">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 mr-1.5 hidden md:inline">
-              Scheme:
+            <span className="text-[11px] font-medium tracking-wide text-[#8C867B] mr-1 hidden md:inline">
+              Harmonic Scheme:
             </span>
             {SCHEMES.map(s => {
               const isActive = s.id === colorScheme;
@@ -76,10 +77,10 @@ export const PaletteDock: React.FC<PaletteDockProps> = ({
                     sounds.playClick();
                     onChangeScheme(s.id);
                   }}
-                  className={`px-2.5 py-1 rounded-lg text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
+                  className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all cursor-pointer ${
                     isActive
-                      ? 'bg-amber-500 text-slate-950 shadow-sm'
-                      : 'bg-slate-800 hover:bg-slate-700/80 text-slate-300'
+                      ? 'bg-[#2A2723] text-[#F5F2EB] border border-[#443E36] shadow-xs'
+                      : 'text-[#9C9588] hover:text-[#F5F2EB] hover:bg-[#22201D]'
                   }`}
                   role="tab"
                   aria-selected={isActive}
@@ -91,20 +92,20 @@ export const PaletteDock: React.FC<PaletteDockProps> = ({
             })}
           </div>
 
-          {/* Color Model & Inspector Toggles */}
+          {/* Right Controls: Model Switch & Auto-Pick & Inspector */}
           <div className="flex items-center gap-2 shrink-0">
             {/* Color Model Switch */}
-            <div className="flex items-center rounded-lg bg-slate-800 p-0.5 border border-slate-700">
+            <div className="flex items-center rounded-lg bg-[#141312] p-0.5 border border-[#2D2A26]">
               <button
                 type="button"
                 onClick={() => {
                   sounds.playClick();
                   onToggleModel('rgb');
                 }}
-                className={`px-2.5 py-1 rounded-md text-xs font-bold transition-all cursor-pointer ${
+                className={`px-2.5 py-1 rounded-md text-xs font-semibold transition-all cursor-pointer ${
                   colorModel === 'rgb'
-                    ? 'bg-blue-600 text-white shadow-sm'
-                    : 'text-slate-400 hover:text-slate-200'
+                    ? 'bg-[#2A2723] text-[#F5F2EB] shadow-xs'
+                    : 'text-[#8C867B] hover:text-[#D6D0C2]'
                 }`}
                 title="Additive RGB Light Model"
               >
@@ -116,10 +117,10 @@ export const PaletteDock: React.FC<PaletteDockProps> = ({
                   sounds.playClick();
                   onToggleModel('cmyk');
                 }}
-                className={`px-2.5 py-1 rounded-md text-xs font-bold transition-all cursor-pointer ${
+                className={`px-2.5 py-1 rounded-md text-xs font-semibold transition-all cursor-pointer ${
                   colorModel === 'cmyk'
-                    ? 'bg-amber-600 text-white shadow-sm'
-                    : 'text-slate-400 hover:text-slate-200'
+                    ? 'bg-[#2A2723] text-[#D49A5B] shadow-xs'
+                    : 'text-[#8C867B] hover:text-[#D6D0C2]'
                 }`}
                 title="Subtractive CMYK Pigment Model"
               >
@@ -134,23 +135,24 @@ export const PaletteDock: React.FC<PaletteDockProps> = ({
                 sounds.playClick();
                 onToggleInspector();
               }}
-              className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-semibold border transition-all cursor-pointer ${
+              className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium border transition-all cursor-pointer ${
                 isInspectorOpen
-                  ? 'bg-purple-900/60 border-purple-500 text-purple-200'
-                  : 'bg-slate-800 hover:bg-slate-700 border-slate-700 text-slate-300'
+                  ? 'bg-[#2A2723] border-[#574E43] text-[#F5F2EB]'
+                  : 'bg-transparent border-[#2D2A26] text-[#8C867B] hover:text-[#D6D0C2]'
               }`}
               aria-label="Toggle Color Inspector"
             >
               <Sliders className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">Inspect Swatch</span>
+              <span className="hidden sm:inline">Inspect</span>
             </button>
           </div>
         </div>
 
         {/* Swatches Rail */}
-        <div className="flex items-center gap-2 overflow-x-auto py-1 no-scrollbar" role="radiogroup" aria-label="Palette Swatches">
+        <div className="flex items-center gap-2.5 overflow-x-auto py-1 no-scrollbar" role="radiogroup" aria-label="Palette Swatches">
           {palette.map((swatch, idx) => {
             const isSelected = idx === selectedSwatchIndex;
+            const isHoverTarget = idx === highlightedSwatchIndex;
             const progress = swatchProgress[idx] || { total: 0, filled: 0, isComplete: false };
 
             return (
@@ -163,24 +165,26 @@ export const PaletteDock: React.FC<PaletteDockProps> = ({
                 }}
                 className={`group relative flex items-center gap-2.5 px-3 py-2 rounded-xl border text-left transition-all cursor-pointer shrink-0 ${
                   isSelected
-                    ? 'bg-slate-800 border-amber-400 ring-2 ring-amber-400/50 shadow-md'
-                    : 'bg-slate-950/60 border-slate-800 hover:border-slate-700'
+                    ? 'bg-[#24211E] border-[#D49A5B]/80 shadow-md ring-1 ring-[#D49A5B]/30'
+                    : isHoverTarget
+                      ? 'bg-[#25221E] border-[#D49A5B] ring-2 ring-[#D49A5B]/50 shadow-md scale-[1.02]'
+                      : 'bg-[#141312] border-[#2A2723] hover:border-[#38332B]'
                 }`}
                 role="radio"
                 aria-checked={isSelected}
                 aria-label={`Swatch ${idx + 1}: ${swatch.name}, ${swatch.hex}`}
               >
-                {/* Swatch circle with checkmark or number */}
+                {/* Swatch chip */}
                 <div
-                  className="relative w-8 h-8 rounded-lg shadow-inner border border-white/20 shrink-0 flex items-center justify-center font-bold text-xs"
+                  className="relative w-8 h-8 rounded-lg shadow-inner border border-white/15 shrink-0 flex items-center justify-center font-bold text-xs"
                   style={{ backgroundColor: swatch.hex }}
                 >
                   {progress.isComplete ? (
-                    <div className="w-5 h-5 rounded-full bg-emerald-500/90 text-white flex items-center justify-center shadow">
+                    <div className="w-4 h-4 rounded-full bg-[#141312]/80 text-[#6E9484] flex items-center justify-center">
                       <Check className="w-3.5 h-3.5 stroke-[3]" />
                     </div>
                   ) : (
-                    <span className="w-4 h-4 rounded-full bg-black/60 text-white text-[10px] flex items-center justify-center font-mono">
+                    <span className="w-4 h-4 rounded-full bg-black/50 text-[#F5F2EB] text-[10px] flex items-center justify-center font-mono">
                       {idx + 1}
                     </span>
                   )}
@@ -189,14 +193,19 @@ export const PaletteDock: React.FC<PaletteDockProps> = ({
                 {/* Swatch labels */}
                 <div className="flex flex-col pr-1">
                   <div className="flex items-center gap-1.5">
-                    <span className="text-xs font-bold text-slate-200 truncate max-w-[110px]">
+                    <span className="text-xs font-semibold text-[#F5F2EB] truncate max-w-[110px]">
                       {swatch.name}
                     </span>
+                    {isHoverTarget && !isSelected && (
+                      <span className="text-[9px] font-medium text-[#D49A5B] bg-[#D49A5B]/15 px-1 py-0.2 rounded">
+                        Required
+                      </span>
+                    )}
                   </div>
-                  <div className="flex items-center gap-2 text-[10px] font-mono text-slate-400">
+                  <div className="flex items-center gap-2 text-[10px] font-mono text-[#8C867B]">
                     <span>{swatch.hex}</span>
                     {progress.total > 0 && (
-                      <span className="text-slate-400 tabular-nums">
+                      <span className="text-[#A8A296] tabular-nums">
                         ({progress.filled}/{progress.total})
                       </span>
                     )}
@@ -204,7 +213,7 @@ export const PaletteDock: React.FC<PaletteDockProps> = ({
                 </div>
 
                 {/* Keyboard Shortcut badge */}
-                <kbd className="hidden lg:inline-block px-1.5 py-0.5 rounded text-[10px] font-mono bg-slate-800 text-slate-400 border border-slate-700">
+                <kbd className="hidden lg:inline-block px-1.5 py-0.5 rounded text-[10px] font-mono bg-[#1C1A18] text-[#8C867B] border border-[#2D2A26]">
                   {idx + 1}
                 </kbd>
               </button>
@@ -212,14 +221,14 @@ export const PaletteDock: React.FC<PaletteDockProps> = ({
           })}
         </div>
 
-        {/* Scheme Educational Clarification line */}
-        <div className="text-[11px] text-slate-400 flex items-center justify-between">
+        {/* Scheme description footer */}
+        <div className="text-[11px] text-[#8C867B] flex items-center justify-between">
           <span className="truncate">
-            <strong className="text-amber-400 font-medium">{activeSchemeObj.label}: </strong>
+            <strong className="text-[#D49A5B] font-medium">{activeSchemeObj.label}: </strong>
             {activeSchemeObj.desc}
           </span>
-          <span className="text-[10px] text-slate-400 font-mono hidden md:inline shrink-0">
-            Screen uses Additive RGB to display simulated Subtractive CMYK gamuts.
+          <span className="text-[10px] text-[#6E685E] font-mono hidden md:inline shrink-0">
+            Harmonic palette mapping · 1 click per partition
           </span>
         </div>
       </div>

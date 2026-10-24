@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, BookOpen, Sun, Droplets, Compass, Award, HelpCircle } from 'lucide-react';
+import { X, BookOpen, Sun, Droplets, Compass } from 'lucide-react';
 import { sounds } from '../services/soundEffects.ts';
 
 interface ColorTheoryModalProps {
@@ -17,9 +17,9 @@ export const ColorTheoryModal: React.FC<ColorTheoryModalProps> = ({ isOpen, onCl
       role="dialog"
       aria-modal="true"
       aria-labelledby="theory-modal-title"
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 select-none animate-fadeIn"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-xs select-none animate-fadeIn"
     >
-      <div className="w-full max-w-2xl bg-slate-900 border border-slate-700/80 rounded-2xl p-6 shadow-2xl relative max-h-[90vh] flex flex-col">
+      <div className="w-full max-w-2xl bg-[#1C1A18] border border-[#38332B] rounded-2xl p-6 sm:p-7 shadow-2xl relative max-h-[90vh] flex flex-col text-[#F5F2EB]">
         {/* Close Button */}
         <button
           type="button"
@@ -27,7 +27,7 @@ export const ColorTheoryModal: React.FC<ColorTheoryModalProps> = ({ isOpen, onCl
             sounds.playClick();
             onClose();
           }}
-          className="absolute top-4 right-4 p-1.5 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-slate-200 cursor-pointer"
+          className="absolute top-5 right-5 p-1.5 rounded-lg hover:bg-[#282521] text-[#8C867B] hover:text-[#F5F2EB] transition-colors cursor-pointer"
           aria-label="Close theory guide"
         >
           <X className="w-5 h-5" />
@@ -35,30 +35,30 @@ export const ColorTheoryModal: React.FC<ColorTheoryModalProps> = ({ isOpen, onCl
 
         {/* Title */}
         <div className="flex items-center gap-2 mb-1">
-          <BookOpen className="w-5 h-5 text-amber-400" />
-          <h2 id="theory-modal-title" className="text-lg font-bold text-slate-100">
+          <BookOpen className="w-4 h-4 text-[#D49A5B]" />
+          <h2 id="theory-modal-title" className="font-editorial text-lg font-bold text-[#F5F2EB]">
             Color Theory Field Guide
           </h2>
         </div>
-        <p className="text-xs text-slate-400 mb-4">
-          Master the optical principles of additive light, subtractive pigments, and chromatic harmonies.
+        <p className="text-xs text-[#8C867B] mb-5">
+          Optical foundations of additive light, subtractive pigments, and harmonic intervals.
         </p>
 
         {/* Navigation Tabs */}
-        <div className="flex border-b border-slate-800 mb-4 gap-2">
+        <div className="flex border-b border-[#2C2924] mb-5 gap-2">
           <button
             type="button"
             onClick={() => {
               sounds.playClick();
               setActiveTab('models');
             }}
-            className={`pb-2 px-3 text-xs font-bold border-b-2 transition-all cursor-pointer ${
+            className={`pb-2.5 px-3 text-xs font-medium border-b-2 transition-all cursor-pointer ${
               activeTab === 'models'
-                ? 'border-amber-400 text-amber-300'
-                : 'border-transparent text-slate-400 hover:text-slate-200'
+                ? 'border-[#D49A5B] text-[#D49A5B]'
+                : 'border-transparent text-[#8C867B] hover:text-[#D6D0C2]'
             }`}
           >
-            RGB vs CMYK Models
+            Light vs. Pigment
           </button>
           <button
             type="button"
@@ -66,13 +66,13 @@ export const ColorTheoryModal: React.FC<ColorTheoryModalProps> = ({ isOpen, onCl
               sounds.playClick();
               setActiveTab('schemes');
             }}
-            className={`pb-2 px-3 text-xs font-bold border-b-2 transition-all cursor-pointer ${
+            className={`pb-2.5 px-3 text-xs font-medium border-b-2 transition-all cursor-pointer ${
               activeTab === 'schemes'
-                ? 'border-amber-400 text-amber-300'
-                : 'border-transparent text-slate-400 hover:text-slate-200'
+                ? 'border-[#D49A5B] text-[#D49A5B]'
+                : 'border-transparent text-[#8C867B] hover:text-[#D6D0C2]'
             }`}
           >
-            The 5 Harmonic Schemes
+            Harmonic Schemes
           </button>
           <button
             type="button"
@@ -80,118 +80,101 @@ export const ColorTheoryModal: React.FC<ColorTheoryModalProps> = ({ isOpen, onCl
               sounds.playClick();
               setActiveTab('rules');
             }}
-            className={`pb-2 px-3 text-xs font-bold border-b-2 transition-all cursor-pointer ${
+            className={`pb-2.5 px-3 text-xs font-medium border-b-2 transition-all cursor-pointer ${
               activeTab === 'rules'
-                ? 'border-amber-400 text-amber-300'
-                : 'border-transparent text-slate-400 hover:text-slate-200'
+                ? 'border-[#D49A5B] text-[#D49A5B]'
+                : 'border-transparent text-[#8C867B] hover:text-[#D6D0C2]'
             }`}
           >
-            Scoring & Rules
+            Rules & Mechanics
           </button>
         </div>
 
-        {/* Scrollable Content */}
-        <div className="overflow-y-auto flex-1 pr-1 space-y-4 text-xs text-slate-300 leading-relaxed">
+        {/* Content Area */}
+        <div className="overflow-y-auto flex-1 pr-1 space-y-4 text-xs leading-relaxed text-[#D6D0C2]">
           {activeTab === 'models' && (
-            <>
-              {/* Additive RGB */}
-              <div className="p-4 rounded-xl bg-blue-950/30 border border-blue-500/40">
-                <div className="flex items-center gap-2 mb-2 font-bold text-blue-400 text-sm">
-                  <Sun className="w-4 h-4" />
-                  <span>Additive RGB (Light Emission)</span>
+            <div className="space-y-4">
+              <div className="p-4 rounded-xl bg-[#141312] border border-[#262420]">
+                <div className="flex items-center gap-2 text-sm font-semibold text-[#F5F2EB] mb-2">
+                  <Sun className="w-4 h-4 text-[#D49A5B]" />
+                  <span>Additive Color Model (RGB Light)</span>
                 </div>
-                <p className="mb-2 text-slate-300">
-                  Used by screens, monitors, and stage lighting. Begins with a black void and superimposes wavelengths of
-                  <strong> Red, Green, and Blue light</strong>. Adding colors increases luminosity, combining toward pure White (255, 255, 255).
+                <p className="mb-2">
+                  Used by screens, projectors, and digital cameras. In this model, light waves are superimposed.
                 </p>
-                <div className="flex gap-2 text-[11px] font-mono">
-                  <span className="px-2 py-0.5 rounded bg-red-900/50 text-red-300 border border-red-700/50">Red (700nm)</span>
-                  <span className="px-2 py-0.5 rounded bg-emerald-900/50 text-emerald-300 border border-emerald-700/50">Green (530nm)</span>
-                  <span className="px-2 py-0.5 rounded bg-blue-900/50 text-blue-300 border border-blue-700/50">Blue (450nm)</span>
-                </div>
+                <ul className="list-disc pl-5 space-y-1 text-[#A8A296]">
+                  <li><strong>Primaries:</strong> Red, Green, Blue.</li>
+                  <li><strong>Convergence:</strong> Red + Green + Blue at maximum intensity (255, 255, 255) creates pure white light.</li>
+                  <li><strong>Absence:</strong> Zero intensity (0, 0, 0) yields absolute darkness / black.</li>
+                </ul>
               </div>
 
-              {/* Subtractive CMYK */}
-              <div className="p-4 rounded-xl bg-amber-950/30 border border-amber-500/40">
-                <div className="flex items-center gap-2 mb-2 font-bold text-amber-400 text-sm">
-                  <Droplets className="w-4 h-4" />
-                  <span>Subtractive CMYK (Ink & Pigment Absorption)</span>
+              <div className="p-4 rounded-xl bg-[#141312] border border-[#262420]">
+                <div className="flex items-center gap-2 text-sm font-semibold text-[#F5F2EB] mb-2">
+                  <Droplets className="w-4 h-4 text-[#5B7B9A]" />
+                  <span>Subtractive Color Model (CMYK Pigment)</span>
                 </div>
-                <p className="mb-2 text-slate-300">
-                  Used by physical print presses, fine art paints, and color printers. Begins with reflective white paper. Inks absorb (subtract) specific light wavelengths.
-                  Combining <strong>Cyan, Magenta, and Yellow</strong> subtracts reflected light toward darkness, with <strong>Key/Black (K)</strong> added for pure depth and contrast.
+                <p className="mb-2">
+                  Used by printmaking, inks, dyes, and painter's oil pigments. Pigments absorb certain wavelengths of ambient light while reflecting others.
                 </p>
-                <div className="p-2.5 rounded bg-slate-950/60 border border-slate-800 text-[11px] text-slate-400">
-                  <strong className="text-amber-300">Important Note: </strong>
-                  Computer displays are physical RGB emitters. When you inspect CMYK values in ColorQuest, the screen mathematically converts the subtractive ink percentages into RGB gamuts for visual preview.
-                </div>
+                <ul className="list-disc pl-5 space-y-1 text-[#A8A296]">
+                  <li><strong>Primaries:</strong> Cyan, Magenta, Yellow, plus Key (Black).</li>
+                  <li><strong>Convergence:</strong> Mixing all inks subtracts wavelengths, creating rich black.</li>
+                  <li><strong>Substrate:</strong> Clean white paper provides the base luminance.</li>
+                </ul>
               </div>
-
-              {/* HSV Note */}
-              <div className="p-4 rounded-xl bg-purple-950/30 border border-purple-500/40">
-                <div className="flex items-center gap-2 mb-1.5 font-bold text-purple-300 text-sm">
-                  <Compass className="w-4 h-4" />
-                  <span>HSV Cylindrical Representation</span>
-                </div>
-                <p className="text-slate-300">
-                  HSV maps colors geometrically: <strong>Hue (0-360°)</strong> around the color wheel, <strong>Saturation (0-100%)</strong> from gray to pure vibrancy, and <strong>Value (0-100%)</strong> brightness.
-                  HSV is a human-friendly cylindrical representation of RGB rather than a physical mixing model.
-                </p>
-              </div>
-            </>
+            </div>
           )}
 
           {activeTab === 'schemes' && (
             <div className="space-y-3">
-              <div className="p-3 rounded-xl bg-slate-950 border border-slate-800">
-                <h4 className="font-bold text-amber-400 text-xs mb-1">1. Monochromatic</h4>
-                <p>Uses a single anchor hue and creates depth purely through variations in saturation (tint) and value (shade). Creates elegant, cohesive, and serene compositions.</p>
+              <div className="p-3.5 rounded-xl bg-[#141312] border border-[#262420]">
+                <h4 className="font-semibold text-sm text-[#F5F2EB] mb-1">Monochromatic</h4>
+                <p className="text-[#A8A296]">
+                  Variations of a single root hue with differing saturation and brightness values. Delivers serene, cohesive, unified atmosphere.
+                </p>
               </div>
 
-              <div className="p-3 rounded-xl bg-slate-950 border border-slate-800">
-                <h4 className="font-bold text-amber-400 text-xs mb-1">2. Complementary</h4>
-                <p>Combines two hues exactly opposite each other on the 360° color wheel (180° separation). Offers maximum visual contrast, vibrancy, and energetic tension.</p>
+              <div className="p-3.5 rounded-xl bg-[#141312] border border-[#262420]">
+                <h4 className="font-semibold text-sm text-[#F5F2EB] mb-1">Complementary Contrast</h4>
+                <p className="text-[#A8A296]">
+                  Pairs hues located exactly opposite each other on the color wheel (180° apart, like Amber and Ultramarine). Creates maximum visual vibration.
+                </p>
               </div>
 
-              <div className="p-3 rounded-xl bg-slate-950 border border-slate-800">
-                <h4 className="font-bold text-amber-400 text-xs mb-1">3. Analogous</h4>
-                <p>Pairs three hues sitting adjacent to one another on the color wheel (separated by ~30°-35°). Emulates natural phenomena like sunsets and oceanic depths.</p>
+              <div className="p-3.5 rounded-xl bg-[#141312] border border-[#262420]">
+                <h4 className="font-semibold text-sm text-[#F5F2EB] mb-1">Analogous Harmony</h4>
+                <p className="text-[#A8A296]">
+                  Adjacent hues situated within 30° to 60° of one another on the wheel. Mimics organic lighting and natural transitions found in flora.
+                </p>
               </div>
 
-              <div className="p-3 rounded-xl bg-slate-950 border border-slate-800">
-                <h4 className="font-bold text-amber-400 text-xs mb-1">4. Warm Spectrum</h4>
-                <p>Documented classification: Hues between 330° and 80° (crimson, scarlet, cadmium orange, amber gold). Invokes solar warmth, physical proximity, and energy.</p>
-              </div>
-
-              <div className="p-3 rounded-xl bg-slate-950 border border-slate-800">
-                <h4 className="font-bold text-amber-400 text-xs mb-1">5. Cool Spectrum</h4>
-                <p>Documented classification: Hues between 90° and 270° (emerald green, seafoam cyan, azure sky, cobalt blue). Invokes tranquility, depth, and atmospheric distance.</p>
+              <div className="p-3.5 rounded-xl bg-[#141312] border border-[#262420]">
+                <h4 className="font-semibold text-sm text-[#F5F2EB] mb-1">Thermal Spectrums (Warm vs. Cool)</h4>
+                <p className="text-[#A8A296]">
+                  Warm tones (330° to 80°: Vermilion, Terracotta, Ochre) evoke sunlight and passion. Cool tones (90° to 270°: Celadon, Cyan, Indigo) evoke water and quiet shadow.
+                </p>
               </div>
             </div>
           )}
 
           {activeTab === 'rules' && (
             <div className="space-y-3">
-              <div className="p-3 rounded-xl bg-slate-950 border border-slate-800">
-                <h4 className="font-bold text-emerald-400 text-xs mb-1">Scoring Breakdown</h4>
-                <ul className="list-disc pl-5 space-y-1 text-slate-300">
-                  <li><strong>Correct Target Color:</strong> +100 points</li>
-                  <li><strong>Harmonious Scheme Alternative:</strong> +40 points</li>
-                  <li><strong>Incorrect Selection:</strong> -10 points (score never drops below 0)</li>
-                  <li><strong>Hint Used:</strong> -25 points</li>
-                  <li><strong>Completion Bonus:</strong> +500 points</li>
-                  <li><strong>Perfect Bonus (0 mistakes & 0 hints):</strong> +1,000 points</li>
+              <div className="p-3.5 rounded-xl bg-[#141312] border border-[#262420]">
+                <h4 className="font-semibold text-sm text-[#F5F2EB] mb-1">Scoring & Multipliers</h4>
+                <ul className="list-disc pl-5 space-y-1.5 text-[#A8A296]">
+                  <li><strong>Exact Harmonic Match:</strong> +100 points.</li>
+                  <li><strong>Compatible Scheme Alternative:</strong> +40 points (awarded when using an adjacent harmonious tone).</li>
+                  <li><strong>Hint Clue:</strong> -25 points.</li>
+                  <li><strong>Masterpiece Completion Bonus:</strong> +500 points (+1,000 flawless run bonus).</li>
                 </ul>
               </div>
 
-              <div className="p-3 rounded-xl bg-slate-950 border border-slate-800">
-                <h4 className="font-bold text-amber-400 text-xs mb-1">Keyboard Shortcuts</h4>
-                <div className="grid grid-cols-2 gap-2 font-mono text-[11px] text-slate-300">
-                  <div><kbd className="px-1.5 py-0.5 bg-slate-800 rounded border border-slate-700">1 - 9</kbd> Select Swatch</div>
-                  <div><kbd className="px-1.5 py-0.5 bg-slate-800 rounded border border-slate-700">H</kbd> Use Hint</div>
-                  <div><kbd className="px-1.5 py-0.5 bg-slate-800 rounded border border-slate-700">Z</kbd> Undo Paint</div>
-                  <div><kbd className="px-1.5 py-0.5 bg-slate-800 rounded border border-slate-700">M</kbd> Toggle Audio</div>
-                </div>
+              <div className="p-3.5 rounded-xl bg-[#141312] border border-[#262420]">
+                <h4 className="font-semibold text-sm text-[#F5F2EB] mb-1">Smart Fill & Touch Accuracy</h4>
+                <p className="text-[#A8A296]">
+                  Tap any number badge directly on the canvas to fill it with pinpoint accuracy. On mobile, multi-touch is reserved for fluid pan and pinch-zoom without accidental misfires.
+                </p>
               </div>
             </div>
           )}

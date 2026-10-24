@@ -58,12 +58,9 @@ export const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
         });
       };
       img.onerror = () => {
-        setErrorMsg('Failed to decode the image file.');
+        setErrorMsg('Could not decode image data. Please try another file.');
       };
       img.src = result;
-    };
-    reader.onerror = () => {
-      setErrorMsg('Error reading the selected file.');
     };
     reader.readAsDataURL(file);
   };
@@ -87,36 +84,17 @@ export const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
-    if (e.target.files && e.target.files[0]) {
-      validateAndProcessFile(e.target.files[0]);
-    }
-  };
-
-  const handleGenerate = () => {
+  const handleStartSegmenting = () => {
     if (!loadedImageRef.current) return;
     setIsProcessing(true);
     sounds.playClick();
-
     setTimeout(() => {
-      try {
-        onImageReady(loadedImageRef.current!, difficulty);
+      if (loadedImageRef.current) {
+        onImageReady(loadedImageRef.current, difficulty);
         setIsProcessing(false);
         onClose();
-      } catch (err) {
-        setIsProcessing(false);
-        setErrorMsg('Image segmentation failed. Please try a different image or lower difficulty.');
       }
-    }, 100);
-  };
-
-  const handleReset = () => {
-    sounds.playClick();
-    setPreviewSrc(null);
-    setImageMeta(null);
-    loadedImageRef.current = null;
-    setErrorMsg(null);
+    }, 200);
   };
 
   return (
@@ -124,38 +102,34 @@ export const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
       role="dialog"
       aria-modal="true"
       aria-labelledby="upload-modal-title"
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 select-none animate-fadeIn"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-xs select-none animate-fadeIn"
     >
-      <div className="w-full max-w-lg bg-slate-900 border border-slate-700/80 rounded-2xl p-6 shadow-2xl relative">
+      <div className="w-full max-w-lg bg-[#1C1A18] border border-[#38332B] rounded-2xl p-6 sm:p-7 shadow-2xl relative flex flex-col text-[#F5F2EB]">
+        {/* Close Button */}
         <button
           type="button"
           onClick={() => {
             sounds.playClick();
             onClose();
           }}
-          className="absolute top-4 right-4 p-1.5 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-slate-200 cursor-pointer"
-          aria-label="Close modal"
+          className="absolute top-5 right-5 p-1.5 rounded-lg hover:bg-[#282521] text-[#8C867B] hover:text-[#F5F2EB] transition-colors cursor-pointer"
+          aria-label="Close upload window"
         >
           <X className="w-5 h-5" />
         </button>
 
+        {/* Title */}
         <div className="flex items-center gap-2 mb-1">
-          <Upload className="w-5 h-5 text-amber-400" />
-          <h2 id="upload-modal-title" className="text-lg font-bold text-slate-100">
-            Upload Custom Image
+          <Upload className="w-4 h-4 text-[#D49A5B]" />
+          <h2 id="upload-modal-title" className="font-editorial text-lg font-bold text-[#F5F2EB]">
+            Transform Image into Colour Block Puzzle
           </h2>
         </div>
-        <p className="text-xs text-slate-400 mb-4">
-          Upload any picture. ColorQuest will extract its harmonic palette and segment it into a numbered region puzzle.
+        <p className="text-xs text-[#8C867B] mb-5">
+          Upload any photo or illustration. The atelier engine extracts dominant color gamuts and segments it into harmonic partitions.
         </p>
 
-        {errorMsg && (
-          <div className="mb-4 p-3 rounded-xl bg-red-950/60 border border-red-500/50 text-red-200 text-xs flex items-center gap-2">
-            <AlertCircle className="w-4 h-4 text-red-400 shrink-0" />
-            <span>{errorMsg}</span>
-          </div>
-        )}
-
+        {/* Drag and Drop Zone */}
         {!previewSrc ? (
           <div
             onDragEnter={handleDrag}
@@ -163,98 +137,134 @@ export const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
             onDragOver={handleDrag}
             onDrop={handleDrop}
             onClick={() => fileInputRef.current?.click()}
-            className={`border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-all ${
+            className={`border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-all flex flex-col items-center justify-center gap-3 ${
               dragActive
-                ? 'border-amber-400 bg-amber-500/10'
-                : 'border-slate-700 hover:border-slate-500 bg-slate-950/50'
+                ? 'border-[#D49A5B] bg-[#22201D]'
+                : 'border-[#38332B] hover:border-[#4A443A] bg-[#141312]'
             }`}
           >
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/png,image/jpeg,image/webp"
-              onChange={handleChange}
-              className="hidden"
-            />
-            <div className="w-12 h-12 rounded-full bg-slate-800 text-amber-400 mx-auto flex items-center justify-center mb-3">
-              <Upload className="w-6 h-6" />
+            <div className="w-12 h-12 rounded-xl bg-[#1E1C1A] border border-[#2D2A26] flex items-center justify-center text-[#D49A5B]">
+              <ImageIcon className="w-6 h-6" />
             </div>
-            <div className="text-sm font-semibold text-slate-200 mb-1">
-              Click to choose image or drag & drop here
-            </div>
-            <div className="text-xs text-slate-400">
-              Supports PNG, JPEG, WEBP up to 15MB
+            <div>
+              <p className="text-xs font-semibold text-[#F5F2EB]">
+                Click to browse or drop an image here
+              </p>
+              <p className="text-[11px] text-[#8C867B] mt-1">
+                PNG, JPEG, or WEBP up to 15MB
+              </p>
             </div>
           </div>
         ) : (
           <div className="space-y-4">
-            <div className="flex items-center gap-4 p-3 bg-slate-950 rounded-xl border border-slate-800">
-              <div className="w-20 h-20 rounded-lg overflow-hidden bg-slate-800 shrink-0 border border-slate-700">
-                <img
-                  src={previewSrc}
-                  alt="Upload preview"
-                  className="w-full h-full object-cover"
-                />
+            <div className="relative aspect-video rounded-xl bg-[#141312] border border-[#2D2A26] overflow-hidden flex items-center justify-center p-2">
+              <img
+                src={previewSrc}
+                alt="Upload preview"
+                className="max-w-full max-h-full object-contain rounded"
+              />
+              <button
+                type="button"
+                onClick={() => {
+                  setPreviewSrc(null);
+                  setImageMeta(null);
+                  loadedImageRef.current = null;
+                }}
+                className="absolute top-3 right-3 p-1.5 rounded-lg bg-[#141312]/80 hover:bg-[#141312] text-[#F5F2EB] border border-[#38332B] cursor-pointer"
+                title="Change Image"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {imageMeta && (
+              <div className="flex items-center justify-between text-xs text-[#8C867B] bg-[#141312] px-3 py-2 rounded-lg border border-[#262420]">
+                <span className="truncate max-w-[200px] text-[#D6D0C2] font-medium">{imageMeta.name}</span>
+                <span className="font-mono text-[11px]">{imageMeta.width}×{imageMeta.height} · {imageMeta.size}</span>
               </div>
-              <div className="flex-1 min-w-0 text-left">
-                <div className="font-semibold text-sm text-slate-200 truncate">{imageMeta?.name}</div>
-                <div className="text-xs font-mono text-slate-400 mt-0.5">
-                  {imageMeta?.width} × {imageMeta?.height} px · {imageMeta?.size}
-                </div>
+            )}
+          </div>
+        )}
+
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/png,image/jpeg,image/webp"
+          className="hidden"
+          onChange={e => {
+            if (e.target.files && e.target.files[0]) {
+              validateAndProcessFile(e.target.files[0]);
+            }
+          }}
+        />
+
+        {errorMsg && (
+          <div className="mt-3 p-3 rounded-lg bg-[#261A18] border border-[#4D2822] text-[#E07A5F] text-xs flex items-center gap-2">
+            <AlertCircle className="w-4 h-4 shrink-0" />
+            <span>{errorMsg}</span>
+          </div>
+        )}
+
+        {/* Difficulty Selection */}
+        {previewSrc && (
+          <div className="mt-4">
+            <span className="text-xs font-medium text-[#8C867B] block mb-1.5">Partition Density:</span>
+            <div className="grid grid-cols-3 gap-1 p-1 bg-[#141312] rounded-lg border border-[#262420]">
+              {(['easy', 'medium', 'hard'] as GameDifficulty[]).map(d => (
                 <button
+                  key={d}
                   type="button"
-                  onClick={handleReset}
-                  className="mt-2 text-xs text-amber-400 hover:underline cursor-pointer font-medium"
+                  onClick={() => {
+                    sounds.playClick();
+                    setDifficulty(d);
+                  }}
+                  className={`py-1.5 px-2 rounded-md text-xs font-medium capitalize transition-all cursor-pointer ${
+                    difficulty === d
+                      ? 'bg-[#282521] text-[#F5F2EB] shadow-xs border border-[#3E3A33]'
+                      : 'text-[#8C867B] hover:text-[#D6D0C2]'
+                  }`}
                 >
-                  Choose a different image
+                  {d}
                 </button>
-              </div>
+              ))}
             </div>
+          </div>
+        )}
 
-            {/* Complexity Selector */}
-            <div>
-              <label className="block text-xs uppercase tracking-wider font-semibold text-slate-400 mb-2">
-                Region Complexity
-              </label>
-              <div className="grid grid-cols-3 gap-2">
-                {(['easy', 'medium', 'hard'] as GameDifficulty[]).map((d) => (
-                  <button
-                    key={d}
-                    type="button"
-                    onClick={() => {
-                      sounds.playClick();
-                      setDifficulty(d);
-                    }}
-                    className={`py-2 px-3 rounded-lg border text-center text-xs font-semibold capitalize cursor-pointer transition-all ${
-                      difficulty === d
-                        ? 'bg-amber-500/20 border-amber-500 text-amber-300 ring-1 ring-amber-500/50'
-                        : 'bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700'
-                    }`}
-                  >
-                    {d}
-                  </button>
-                ))}
-              </div>
-            </div>
+        {/* Action Button */}
+        <div className="mt-6 flex items-center justify-end gap-3">
+          <button
+            type="button"
+            onClick={() => {
+              sounds.playClick();
+              onClose();
+            }}
+            className="px-4 py-2 rounded-xl text-xs font-medium text-[#A8A296] hover:text-[#F5F2EB] hover:bg-[#22201D] transition-colors cursor-pointer"
+          >
+            Cancel
+          </button>
 
-            {/* Generate Button */}
+          {previewSrc && (
             <button
               type="button"
-              onClick={handleGenerate}
+              onClick={handleStartSegmenting}
               disabled={isProcessing}
-              className="w-full py-3 rounded-xl font-bold text-sm bg-amber-500 hover:bg-amber-400 text-slate-950 flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20 cursor-pointer transition-all"
+              className="py-2.5 px-5 rounded-xl text-xs font-bold bg-[#D49A5B] hover:bg-[#C2894A] text-[#141312] flex items-center gap-2 transition-all cursor-pointer shadow-md shadow-[#D49A5B]/15"
             >
               {isProcessing ? (
                 <>
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                  <span>Segmenting Image...</span>
+                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  <span>Segmenting...</span>
                 </>
               ) : (
-                <span>Generate Colour Puzzle</span>
+                <>
+                  <CheckCircle className="w-3.5 h-3.5" />
+                  <span>Generate Puzzle</span>
+                </>
               )}
             </button>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );

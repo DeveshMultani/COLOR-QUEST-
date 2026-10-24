@@ -1,5 +1,5 @@
 import React from 'react';
-import { Info, Sparkles, Sun, Droplets, HelpCircle, X } from 'lucide-react';
+import { Info, X } from 'lucide-react';
 import type { ColorSwatch, ColorModelMode, ColorSchemeType } from '../types/game.ts';
 
 interface ColorInspectorProps {
@@ -13,15 +13,13 @@ interface ColorInspectorProps {
 export const ColorInspector: React.FC<ColorInspectorProps> = ({
   swatch,
   activeModel,
-  activeScheme,
   onClose,
-  isCompact = false,
 }) => {
   if (!swatch) {
     return (
-      <div className="bg-slate-900 border border-slate-800 rounded-xl p-4 text-slate-400 text-xs flex items-center gap-2">
-        <Info className="w-4 h-4 text-slate-400 shrink-0" />
-        <span>Select or hover over any palette swatch to inspect its optical properties.</span>
+      <div className="bg-[#1C1A18] border border-[#2A2723] rounded-xl p-4 text-[#8C867B] text-xs flex items-center gap-2">
+        <Info className="w-4 h-4 text-[#8C867B] shrink-0" />
+        <span>Select any palette swatch to inspect its optical channels and coordinates.</span>
       </div>
     );
   }
@@ -29,12 +27,12 @@ export const ColorInspector: React.FC<ColorInspectorProps> = ({
   const { rgb, cmyk, hsv, isWarm, name, hex, description } = swatch;
 
   return (
-    <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 text-slate-200 shadow-xl relative">
+    <div className="bg-[#1C1A18] border border-[#2A2723] rounded-2xl p-4 text-[#F5F2EB] shadow-xl relative">
       {onClose && (
         <button
           type="button"
           onClick={onClose}
-          className="absolute top-3 right-3 p-1 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-slate-200 cursor-pointer"
+          className="absolute top-3 right-3 p-1.5 rounded-lg hover:bg-[#282521] text-[#8C867B] hover:text-[#F5F2EB] transition-colors cursor-pointer"
           aria-label="Close Inspector"
         >
           <X className="w-4 h-4" />
@@ -44,23 +42,17 @@ export const ColorInspector: React.FC<ColorInspectorProps> = ({
       {/* Header swatch presentation */}
       <div className="flex items-center gap-3.5 mb-4">
         <div
-          className="w-12 h-12 rounded-xl shadow-inner border border-white/20 shrink-0 ring-2 ring-black/40"
+          className="w-12 h-12 rounded-xl shadow-inner border border-white/20 shrink-0"
           style={{ backgroundColor: hex }}
         />
         <div>
           <div className="flex items-center gap-2">
-            <h3 className="font-bold text-sm text-slate-100">{name}</h3>
-            <span
-              className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${
-                isWarm
-                  ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30'
-                  : 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/30'
-              }`}
-            >
-              {isWarm ? 'Warm Tone' : 'Cool Tone'}
+            <h3 className="font-semibold text-sm text-[#F5F2EB]">{name}</h3>
+            <span className="text-[11px] text-[#A8A296]">
+              {isWarm ? 'Warm Spectrum' : 'Cool Spectrum'}
             </span>
           </div>
-          <div className="text-xs font-mono text-slate-400 mt-0.5">{hex}</div>
+          <div className="text-xs font-mono text-[#D49A5B] mt-0.5">{hex}</div>
         </div>
       </div>
 
@@ -70,40 +62,40 @@ export const ColorInspector: React.FC<ColorInspectorProps> = ({
         <div
           className={`p-3 rounded-xl border ${
             activeModel === 'rgb'
-              ? 'bg-blue-950/40 border-blue-500/60 ring-1 ring-blue-500/30'
-              : 'bg-slate-950/50 border-slate-800'
+              ? 'bg-[#22201D] border-[#443E36]'
+              : 'bg-[#141312] border-[#24221E]'
           }`}
         >
-          <div className="flex items-center justify-between text-[11px] font-semibold uppercase tracking-wider text-blue-400 mb-2">
+          <div className="flex items-center justify-between text-[11px] font-medium text-[#8C867B] mb-2">
             <span>Additive Light (RGB)</span>
-            <span className="text-[10px] text-slate-400">Emitted</span>
+            <span className="text-[10px] text-[#6E685E]">0-255</span>
           </div>
           <div className="space-y-1.5 font-mono text-xs">
             <div className="flex items-center justify-between">
-              <span className="text-red-400 font-semibold">Red</span>
+              <span className="text-[#E07A5F] font-medium">Red</span>
               <div className="flex items-center gap-2">
-                <div className="w-16 h-1.5 bg-slate-800 rounded-full overflow-hidden">
-                  <div className="h-full bg-red-500" style={{ width: `${(rgb.r / 255) * 100}%` }} />
+                <div className="w-16 h-1.5 bg-[#141312] rounded-full overflow-hidden border border-[#2D2A26]">
+                  <div className="h-full bg-[#E07A5F]" style={{ width: `${(rgb.r / 255) * 100}%` }} />
                 </div>
-                <span className="tabular-nums text-slate-300 w-8 text-right">{rgb.r}</span>
+                <span className="tabular-nums text-[#D6D0C2] w-8 text-right">{rgb.r}</span>
               </div>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-green-400 font-semibold">Green</span>
+              <span className="text-[#6E9484] font-medium">Green</span>
               <div className="flex items-center gap-2">
-                <div className="w-16 h-1.5 bg-slate-800 rounded-full overflow-hidden">
-                  <div className="h-full bg-emerald-500" style={{ width: `${(rgb.g / 255) * 100}%` }} />
+                <div className="w-16 h-1.5 bg-[#141312] rounded-full overflow-hidden border border-[#2D2A26]">
+                  <div className="h-full bg-[#6E9484]" style={{ width: `${(rgb.g / 255) * 100}%` }} />
                 </div>
-                <span className="tabular-nums text-slate-300 w-8 text-right">{rgb.g}</span>
+                <span className="tabular-nums text-[#D6D0C2] w-8 text-right">{rgb.g}</span>
               </div>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-blue-400 font-semibold">Blue</span>
+              <span className="text-[#5B7B9A] font-medium">Blue</span>
               <div className="flex items-center gap-2">
-                <div className="w-16 h-1.5 bg-slate-800 rounded-full overflow-hidden">
-                  <div className="h-full bg-blue-500" style={{ width: `${(rgb.b / 255) * 100}%` }} />
+                <div className="w-16 h-1.5 bg-[#141312] rounded-full overflow-hidden border border-[#2D2A26]">
+                  <div className="h-full bg-[#5B7B9A]" style={{ width: `${(rgb.b / 255) * 100}%` }} />
                 </div>
-                <span className="tabular-nums text-slate-300 w-8 text-right">{rgb.b}</span>
+                <span className="tabular-nums text-[#D6D0C2] w-8 text-right">{rgb.b}</span>
               </div>
             </div>
           </div>
@@ -113,62 +105,47 @@ export const ColorInspector: React.FC<ColorInspectorProps> = ({
         <div
           className={`p-3 rounded-xl border ${
             activeModel === 'cmyk'
-              ? 'bg-amber-950/40 border-amber-500/60 ring-1 ring-amber-500/30'
-              : 'bg-slate-950/50 border-slate-800'
+              ? 'bg-[#22201D] border-[#443E36]'
+              : 'bg-[#141312] border-[#24221E]'
           }`}
         >
-          <div className="flex items-center justify-between text-[11px] font-semibold uppercase tracking-wider text-amber-400 mb-2">
+          <div className="flex items-center justify-between text-[11px] font-medium text-[#8C867B] mb-2">
             <span>Subtractive Pigment (CMYK)</span>
-            <span className="text-[10px] text-slate-400">Absorbed</span>
+            <span className="text-[10px] text-[#6E685E]">0-100%</span>
           </div>
-          <div className="space-y-1.5 font-mono text-xs">
+          <div className="space-y-1 font-mono text-xs">
             <div className="flex items-center justify-between">
-              <span className="text-cyan-400 font-semibold">Cyan</span>
-              <span className="tabular-nums text-slate-300">{cmyk.c}%</span>
+              <span className="text-[#38BDF8]">Cyan</span>
+              <span className="tabular-nums text-[#D6D0C2]">{cmyk.c}%</span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-pink-400 font-semibold">Magenta</span>
-              <span className="tabular-nums text-slate-300">{cmyk.m}%</span>
+              <span className="text-[#F472B6]">Magenta</span>
+              <span className="tabular-nums text-[#D6D0C2]">{cmyk.m}%</span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-yellow-400 font-semibold">Yellow</span>
-              <span className="tabular-nums text-slate-300">{cmyk.y}%</span>
+              <span className="text-[#FBBF24]">Yellow</span>
+              <span className="tabular-nums text-[#D6D0C2]">{cmyk.y}%</span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-slate-400 font-semibold">Key/Black</span>
-              <span className="tabular-nums text-slate-300">{cmyk.k}%</span>
+              <span className="text-[#A1A1AA]">Key (Black)</span>
+              <span className="tabular-nums text-[#D6D0C2]">{cmyk.k}%</span>
             </div>
           </div>
         </div>
       </div>
 
-      {/* HSV Coordinates breakdown */}
-      <div className="p-3 bg-slate-950/50 border border-slate-800 rounded-xl mb-3">
-        <div className="flex items-center justify-between text-[11px] font-semibold uppercase tracking-wider text-purple-400 mb-2">
-          <span>HSV Cylindrical Coordinates</span>
-          <span className="text-[10px] text-slate-400">Geometry</span>
-        </div>
-        <div className="grid grid-cols-3 gap-2 text-center font-mono">
-          <div className="p-1.5 bg-slate-900 rounded-lg border border-slate-800">
-            <div className="text-[10px] text-slate-400 uppercase">Hue</div>
-            <div className="text-xs font-bold text-purple-300">{hsv.h}°</div>
-          </div>
-          <div className="p-1.5 bg-slate-900 rounded-lg border border-slate-800">
-            <div className="text-[10px] text-slate-400 uppercase">Saturation</div>
-            <div className="text-xs font-bold text-purple-300">{hsv.s}%</div>
-          </div>
-          <div className="p-1.5 bg-slate-900 rounded-lg border border-slate-800">
-            <div className="text-[10px] text-slate-400 uppercase">Value / Light</div>
-            <div className="text-xs font-bold text-purple-300">{hsv.v}%</div>
-          </div>
-        </div>
+      {/* HSV Wheel Coordinate Footnote */}
+      <div className="p-2.5 bg-[#141312] border border-[#24221E] rounded-xl flex items-center justify-between text-xs font-mono text-[#8C867B]">
+        <span>Hue: <strong className="text-[#F5F2EB]">{Math.round(hsv.h)}°</strong></span>
+        <span>Saturation: <strong className="text-[#F5F2EB]">{Math.round(hsv.s)}%</strong></span>
+        <span>Brightness: <strong className="text-[#F5F2EB]">{Math.round(hsv.v)}%</strong></span>
       </div>
 
-      {/* Educational Note */}
-      <div className="text-[11px] text-slate-400 leading-relaxed bg-slate-950/80 p-2.5 rounded-xl border border-slate-800">
-        <span className="font-semibold text-slate-300">Theory Note: </span>
-        HSV is a cylindrical transformation of RGB coordinates designed for human perception, not a separate physical color-mixing model.
-      </div>
+      {description && (
+        <p className="text-xs text-[#8C867B] mt-2.5 leading-relaxed">
+          {description}
+        </p>
+      )}
     </div>
   );
 };
